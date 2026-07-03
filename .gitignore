@@ -24,6 +24,15 @@ node_modules
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# environment
+.env
+.env.*
+!.env.example
+
+# AI / editor tooling
+.agents/
+.cursor/
+
 # misc
 /.sass-cache
 /connect.lock
