@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { type Repository } from 'typeorm';
 import { Client } from '../clients/entities/client.entity';
 import {
-  ClientsByMonthDto,
-  DashboardResponseDto,
-  LatestClientDto,
+  type ClientsByMonthDto,
+  type DashboardResponseDto,
+  type LatestClientDto,
 } from './dto/dashboard-response.dto';
 
 @Injectable()

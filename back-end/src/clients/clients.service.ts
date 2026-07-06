@@ -43,13 +43,17 @@ export class ClientsService {
   }
 
   async findOne(id: string): Promise<ClientResponseDto> {
-    const client = await this.findActiveClient(id);
+    await this.findActiveClient(id);
 
     await this.clientRepository.increment({ id }, 'accessCount', 1);
 
     const updated = await this.clientRepository.findOne({ where: { id } });
 
-    return this.toResponse(updated!);
+    if (!updated) {
+      throw new NotFoundException('Client not found');
+    }
+
+    return this.toResponse(updated);
   }
 
   async update(

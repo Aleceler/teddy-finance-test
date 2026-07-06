@@ -10,6 +10,8 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { validate } from './config/env.validation';
 import { typeOrmConfig } from './config/typeorm.config';
 import { HealthModule } from './health/health.module';
+import { MetricsModule } from './metrics/metrics.module';
+import { createPinoHttpConfig } from './config/pino.config';
 
 @Module({
   imports: [
@@ -22,12 +24,9 @@ import { HealthModule } from './health/health.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        pinoHttp: {
-          transport:
-            configService.get<string>('NODE_ENV') !== 'production'
-              ? { target: 'pino-pretty', options: { singleLine: true } }
-              : undefined,
-        },
+        pinoHttp: createPinoHttpConfig(
+          configService.get<string>('NODE_ENV') === 'production',
+        ),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -39,6 +38,7 @@ import { HealthModule } from './health/health.module';
     ClientsModule,
     DashboardModule,
     HealthModule,
+    MetricsModule,
   ],
   providers: [
     {
