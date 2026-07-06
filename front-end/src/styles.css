@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+
+@theme {
+  --color-teddy-orange: #ec6724;
+  --color-teddy-gray: #f5f5f5;
+  --color-teddy-border: #e5e5e5;
+}
+
+body {
+  @apply bg-teddy-gray text-neutral-900 antialiased;
+}
