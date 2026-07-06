@@ -100,3 +100,15 @@ npx nx test @org/back-end
 ```
 
 Cobertura em `back-end/test-output/jest/coverage`.
+
+## E2E (Playwright)
+
+```bash
+npx playwright install chromium
+npx nx e2e back-end-e2e
+```
+
+Cenários em `back-end-e2e/src/`:
+- Login (sucesso e credenciais inválidas)
+- CRUD completo de clientes via API
+- Bloqueio de rotas sem autenticação

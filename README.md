@@ -41,6 +41,8 @@ Para desenvolvimento local, ajuste `DATABASE_PORT` e `CORS_ORIGIN` no `.env` con
 | `npx nx test @org/front-end` | Testes Vitest |
 | `npx nx lint @org/back-end` | Lint da API |
 | `npx nx lint @org/front-end` | Lint do front |
+| `npx nx e2e back-end-e2e` | E2E API (Playwright) |
+| `npx nx e2e front-end-e2e` | E2E UI (Playwright) |
 | `npx nx graph` | Grafo de dependências Nx |
 
 ## Docker
@@ -60,6 +62,18 @@ docker compose up --build
 | Métricas | http://localhost:3000/metrics |
 
 Login padrão (Docker): `admin@example.com` / `admin123`
+
+## E2E (Playwright)
+
+Requer PostgreSQL acessível (ex.: `docker compose up postgres`) e browsers instalados:
+
+```bash
+npx playwright install chromium
+npx nx e2e back-end-e2e
+npx nx e2e front-end-e2e
+```
+
+Credenciais lidas do `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`).
 
 ## CI/CD
 

@@ -93,6 +93,18 @@ npx nx test @org/front-end
 
 Specs em `src/**/*.spec.{ts,tsx}` com setup em `src/test/`.
 
+## E2E (Playwright)
+
+```bash
+npx playwright install chromium
+npx nx e2e front-end-e2e
+```
+
+Cenários em `front-end-e2e/src/`:
+- Login, validação e logout
+- Criar cliente pelo modal
+- Selecionar e desselecionar clientes
+
 ## Build
 
 ```bash

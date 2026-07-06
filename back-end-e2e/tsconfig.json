@@ -1,11 +1,15 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "out-tsc/@org/back-end-e2e",
-    "esModuleInterop": true,
-    "noUnusedLocals": false,
-    "noImplicitAny": false
+    "allowJs": true,
+    "outDir": "out-tsc/playwright",
+    "sourceMap": false
   },
-  "include": ["jest.config.ts", "src/**/*.ts"],
-  "references": []
+  "include": [
+    "**/*.ts",
+    "playwright.config.mts",
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": ["out-tsc", "test-output"]
 }
