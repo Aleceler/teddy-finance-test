@@ -1,4 +1,5 @@
 import { Minus, Pencil, Plus, Trash2 } from 'lucide-react';
+import { formatCurrency } from '../../lib/currency';
 import type { Client } from '../../types/client.types';
 
 interface ClientCardProps {
@@ -25,13 +26,10 @@ export function ClientCard({
       <div className="flex flex-1 flex-col items-center px-4 py-6 text-center">
         <h3 className="text-lg font-bold text-neutral-900">{client.name}</h3>
         <p className="mt-2 text-sm text-neutral-700">
-          E-mail: {client.email}
+          Salário: {formatCurrency(client.phone)}
         </p>
         <p className="mt-1 text-sm text-neutral-700">
-          Telefone: {client.phone ?? '-'}
-        </p>
-        <p className="mt-1 text-sm text-neutral-700">
-          Documento: {client.document ?? '-'}
+          Empresa: {formatCurrency(client.document)}
         </p>
       </div>
 

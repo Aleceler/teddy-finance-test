@@ -9,6 +9,7 @@ import { Input } from '../../../components/ui/input';
 import { LoadingState } from '../../../components/ui/loading-state';
 import { Modal } from '../../../components/ui/modal';
 import { Pagination } from '../../../components/ui/pagination';
+import { isValidCurrencyInput, parseCurrencyInput } from '../../../lib/currency';
 import { useSelectedClientsStore } from '../../../stores/selected-clients.store';
 import type { Client } from '../../../types/client.types';
 import { useClients } from '../hooks/useClients';
@@ -20,9 +21,14 @@ const PAGE_SIZE_OPTIONS = [8, 12, 16] as const;
 
 const clientFormSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('E-mail inválido'),
-  phone: z.string().optional(),
-  document: z.string().optional(),
+  salary: z
+    .string()
+    .min(1, 'Salário é obrigatório')
+    .refine(isValidCurrencyInput, 'Salário inválido'),
+  companyValue: z
+    .string()
+    .min(1, 'Valor da empresa é obrigatório')
+    .refine(isValidCurrencyInput, 'Valor da empresa inválido'),
 });
 
 type ClientFormValues = z.infer<typeof clientFormSchema>;
@@ -75,9 +81,8 @@ export function ClientsListPage() {
     setActiveClient(client);
     editForm.reset({
       name: client.name,
-      email: client.email,
-      phone: client.phone ?? '',
-      document: client.document ?? '',
+      salary: client.phone ?? '',
+      companyValue: client.document ?? '',
     });
     setModal('edit');
   };
@@ -91,9 +96,9 @@ export function ClientsListPage() {
     createClient(
       {
         name: values.name,
-        email: values.email,
-        phone: values.phone || undefined,
-        document: values.document || undefined,
+        email: buildClientEmail(values.name),
+        phone: parseCurrencyInput(values.salary),
+        document: parseCurrencyInput(values.companyValue),
       },
       { onSuccess: closeModal },
     );
@@ -109,9 +114,8 @@ export function ClientsListPage() {
         id: activeClient.id,
         payload: {
           name: values.name,
-          email: values.email,
-          phone: values.phone || undefined,
-          document: values.document || undefined,
+          phone: parseCurrencyInput(values.salary),
+          document: parseCurrencyInput(values.companyValue),
         },
       },
       { onSuccess: closeModal },
@@ -212,20 +216,14 @@ export function ClientsListPage() {
             {...createForm.register('name')}
           />
           <Input
-            placeholder="Digite o e-mail:"
-            type="email"
-            error={createForm.formState.errors.email?.message}
-            {...createForm.register('email')}
+            placeholder="Digite o salário:"
+            error={createForm.formState.errors.salary?.message}
+            {...createForm.register('salary')}
           />
           <Input
-            placeholder="Digite o telefone:"
-            error={createForm.formState.errors.phone?.message}
-            {...createForm.register('phone')}
-          />
-          <Input
-            placeholder="Digite o documento:"
-            error={createForm.formState.errors.document?.message}
-            {...createForm.register('document')}
+            placeholder="Digite o valor da empresa:"
+            error={createForm.formState.errors.companyValue?.message}
+            {...createForm.register('companyValue')}
           />
           <Button type="submit" isLoading={isCreating} className="w-full">
             Criar cliente
@@ -248,20 +246,14 @@ export function ClientsListPage() {
             {...editForm.register('name')}
           />
           <Input
-            placeholder="Digite o e-mail:"
-            type="email"
-            error={editForm.formState.errors.email?.message}
-            {...editForm.register('email')}
+            placeholder="Digite o salário:"
+            error={editForm.formState.errors.salary?.message}
+            {...editForm.register('salary')}
           />
           <Input
-            placeholder="Digite o telefone:"
-            error={editForm.formState.errors.phone?.message}
-            {...editForm.register('phone')}
-          />
-          <Input
-            placeholder="Digite o documento:"
-            error={editForm.formState.errors.document?.message}
-            {...editForm.register('document')}
+            placeholder="Digite o valor da empresa:"
+            error={editForm.formState.errors.companyValue?.message}
+            {...editForm.register('companyValue')}
           />
           <Button type="submit" isLoading={isUpdating} className="w-full">
             Editar cliente
@@ -295,8 +287,18 @@ export function ClientsListPage() {
 function emptyFormValues(): ClientFormValues {
   return {
     name: '',
-    email: '',
-    phone: '',
-    document: '',
+    salary: '',
+    companyValue: '',
   };
+}
+
+function buildClientEmail(name: string): string {
+  const slug = name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  return `${slug || 'cliente'}-${Date.now()}@clients.local`;
 }
