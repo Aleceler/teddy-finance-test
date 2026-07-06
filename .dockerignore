@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+dist
+**/dist
+.git
+.nx/cache
+.nx/workspace-data
+coverage
+test-output
+**/.env
+!**/.env.example
+.cursor
+.agents
+*.log
+.DS_Store

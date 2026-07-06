@@ -1,12 +1,17 @@
 services:
-  front-end:
-    image: node:22-alpine
-    container_name: teddy-open-finance-front-end
-    working_dir: /workspace
-    volumes:
-      - ..:/workspace
+  frontend:
+    build:
+      context: ..
+      dockerfile: front-end/Dockerfile
+    container_name: teddy-open-finance-frontend
+    restart: unless-stopped
     ports:
       - '4200:4200'
-    command: npx nx dev front-end -- --host 0.0.0.0
     environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
       CHOKIDAR_USEPOLLING: 'true'
+    volumes:
+      - ..:/workspace
+      - /workspace/node_modules
+    stdin_open: true
+    tty: true
